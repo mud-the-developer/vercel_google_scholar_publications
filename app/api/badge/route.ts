@@ -36,7 +36,7 @@ export async function GET(request: NextRequest): Promise<Response> {
         const status = statusMap[errorType] ?? 500;
 
         return Response.json(
-          { error: status >= 500 ? 'Internal server error' : errorMessage },
+          { error: errorMessage, errorType },
           { status }
         );
       }
