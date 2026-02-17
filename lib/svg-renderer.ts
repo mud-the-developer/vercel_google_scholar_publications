@@ -14,7 +14,7 @@ const DEFAULT_OPTIONS: SVGRenderOptions = {
 const HEADER_HEIGHT = 40;
 const ROW_HEIGHT = 64;
 const PADDING_X = 16;
-const WIDTH = 480;
+const WIDTH = 720;
 
 function escapeXml(str: string): string {
   return str
@@ -25,12 +25,12 @@ function escapeXml(str: string): string {
     .replace(/'/g, '&apos;');
 }
 
-function truncateTitle(title: string, maxChars: number = 42): string {
+function truncateTitle(title: string, maxChars: number = 65): string {
   if (title.length <= maxChars) return title;
   return title.slice(0, maxChars - 1) + '…';
 }
 
-function truncateAuthors(authors: string, maxChars: number = 55): string {
+function truncateAuthors(authors: string, maxChars: number = 80): string {
   if (authors.length <= maxChars) return authors;
   return authors.slice(0, maxChars - 1) + '…';
 }

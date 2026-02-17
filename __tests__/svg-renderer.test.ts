@@ -56,10 +56,10 @@ describe('SVG Renderer - Property-Based Tests', () => {
 
         // Verify each displayed paper's data appears in the SVG
         for (const paper of displayedPapers) {
-          // Title: renderer truncates at 42 chars, so check the truncated form
+          // Title: renderer truncates at 65 chars, so check the truncated form
           const truncated =
-            paper.title.length > 42
-              ? paper.title.slice(0, 41) + '…'
+            paper.title.length > 65
+              ? paper.title.slice(0, 64) + '…'
               : paper.title;
           expect(svg).toContain(truncated);
 
