@@ -60,9 +60,7 @@ function renderPaperRow(
       : '';
 
   return `${dividerLine}
-    <a href="${escapeXml(paper.scholarUrl)}" target="_blank">
-      <text x="${PADDING_X}" y="${titleY}" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="${colors.title}" font-weight="600">${displayTitle}</text>
-    </a>
+    <text x="${PADDING_X}" y="${titleY}" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="13" fill="${colors.title}" font-weight="600">${displayTitle}</text>
     <text x="${PADDING_X}" y="${authorsY}" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="${colors.authors}">${displayAuthors}</text>
     <text x="${PADDING_X}" y="${yearY}" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="11" fill="${colors.yearText}">${escapeXml(yearStr)}</text>
     <rect x="${badgeX}" y="${badgeY}" width="${badgeWidth}" height="22" rx="11" fill="${colors.citationBadge}"/>
@@ -88,7 +86,7 @@ export function renderSVG(
   <rect x="0.5" y="0.5" width="${WIDTH - 1}" height="${HEADER_HEIGHT}" rx="6" fill="${colors.headerBg}" stroke="${colors.border}" stroke-width="1"/>
   <rect x="0.5" y="20" width="${WIDTH - 1}" height="${HEADER_HEIGHT - 19}" fill="${colors.headerBg}"/>
   <line x1="0.5" y1="${HEADER_HEIGHT}" x2="${WIDTH - 0.5}" y2="${HEADER_HEIGHT}" stroke="${colors.border}" stroke-width="1"/>
-  <text x="${PADDING_X}" y="26" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="14" fill="${colors.headerTitle}" font-weight="700">📚 Publications</text>
+  <text x="${PADDING_X}" y="26" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="14" fill="${colors.headerTitle}" font-weight="700">Publications</text>
   <text x="${WIDTH - PADDING_X}" y="26" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="12" fill="${colors.headerSub}" font-weight="600" text-anchor="end">Cites</text>
 ${rows}
 </svg>`;
