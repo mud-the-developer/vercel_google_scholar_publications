@@ -6,6 +6,7 @@ Google Scholar 프로필에서 논문 인용 데이터를 스크래핑하여 SVG
 
 - `/api/badge` — 인용 상위 논문을 SVG 이미지로 렌더링 (GitHub README 삽입용)
 - `/api/widget` — 인용 상위 논문을 HTML 페이지로 렌더링 (블로그 iframe 임베드용)
+- SVG 배지는 시스템 라이트/다크 모드(`prefers-color-scheme`)에 맞춰 자동으로 색상이 전환됨
 - 24시간 TTL 기반 in-memory 캐싱 + CDN Cache-Control 헤더
 - Google Scholar rate-limit, CAPTCHA, 네트워크 에러 등 에러 처리
 

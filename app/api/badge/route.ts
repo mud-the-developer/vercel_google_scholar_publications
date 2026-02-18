@@ -18,7 +18,6 @@ export async function GET(request: NextRequest): Promise<Response> {
   }
 
   const count = Math.max(1, parseInt(searchParams.get('count') ?? '5', 10) || 5);
-  const theme = searchParams.get('theme') ?? 'light';
 
   try {
     let papers = cache.get(scholarId);
@@ -51,7 +50,7 @@ export async function GET(request: NextRequest): Promise<Response> {
       }
     }
 
-    const svg = renderSVG(papers, { maxPapers: count, theme });
+    const svg = renderSVG(papers, { maxPapers: count });
 
     return new Response(svg, {
       status: 200,

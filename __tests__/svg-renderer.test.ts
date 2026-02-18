@@ -72,8 +72,8 @@ describe('SVG Renderer - Property-Based Tests', () => {
         }
 
         // Verify the count of rendered papers matches expectation.
-        // Each paper row has a title <text> with font-size="13" and font-weight="600".
-        const titleElements = svg.match(/font-size="13" fill="[^"]*" font-weight="600">/g) ?? [];
+        // Each paper row title uses the paper-title CSS class.
+        const titleElements = svg.match(/class="paper-title"/g) ?? [];
         expect(titleElements.length).toBe(expectedCount);
       }),
       { numRuns: 20 },
@@ -142,7 +142,7 @@ describe('SVG Renderer - Unit Tests', () => {
     expect(svg).toContain('2019');
 
     // Should have exactly 2 title elements (one per paper)
-    const titleElements = svg.match(/font-size="13" fill="[^"]*" font-weight="600">/g) ?? [];
+    const titleElements = svg.match(/class="paper-title"/g) ?? [];
     expect(titleElements.length).toBe(2);
 
     // Should still be valid SVG
@@ -164,11 +164,18 @@ describe('SVG Renderer - Unit Tests', () => {
     expect(trimmed.endsWith('</svg>')).toBe(true);
 
     // No paper rows rendered
-    const titleElements = svg.match(/font-size="13" fill="[^"]*" font-weight="600">/g) ?? [];
+    const titleElements = svg.match(/class="paper-title"/g) ?? [];
     expect(titleElements.length).toBe(0);
 
     // Header should still be present
     expect(svg).toContain('Publications');
   });
-});
 
+  it('includes system dark-mode media query while keeping light theme as default', () => {
+    const svg = renderSVG([]);
+
+    expect(svg).toContain('@media (prefers-color-scheme: dark)');
+    expect(svg).toContain('.badge-surface { fill: #ffffff; }');
+    expect(svg).toContain('.badge-surface { fill: #0d1117; }');
+  });
+});
