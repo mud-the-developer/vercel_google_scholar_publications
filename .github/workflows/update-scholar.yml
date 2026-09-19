@@ -24,7 +24,9 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Scrape Google Scholar
+      - name: Fetch Google Scholar via SerpApi
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
         run: npx --yes tsx@4.20.6 scripts/scrape.ts -Uiul2AAAAAJ
       - name: Commit updated data
         env:
