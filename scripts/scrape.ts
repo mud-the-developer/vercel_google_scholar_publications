@@ -4,41 +4,57 @@
  * 사용법: npx tsx scripts/scrape.ts <scholar_id>
  * 예시:   npx tsx scripts/scrape.ts -Uiul2AAAAAJ
  */
+import { loadFallbackData } from '../lib/fallback';
 import { scrapeScholarProfile } from '../lib/scraper';
 import type { Paper } from '../lib/types';
 import { writeFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
-async function scrapeViaSerpApi(scholarId: string, apiKey: string): Promise<Paper[]> {
-  const url = new URL('https://serpapi.com/search.json');
-  url.search = new URLSearchParams({
+async function fetchSerpApi(
+  params: Record<string, string>,
+  apiKey: string,
+): Promise<any> {
+  const query = new URLSearchParams({ ...params, api_key: apiKey });
+  const response = await fetch(`https://serpapi.com/search.json?${query}`, {
+    signal: AbortSignal.timeout(30_000),
+  });
+  const data = await response.json();
+  if (!response.ok || data.error) throw new Error(data.error ?? `HTTP ${response.status}`);
+  return data;
+}
+
+async function scrapeViaSerpApi(
+  scholarId: string,
+  apiKey: string,
+  existing: Paper[],
+): Promise<Paper[]> {
+  const data = await fetchSerpApi({
     engine: 'google_scholar_author',
     author_id: scholarId,
     num: '100',
-    api_key: apiKey,
-  }).toString();
-
-  const response = await fetch(url, { signal: AbortSignal.timeout(30_000) });
-  const data = await response.json() as {
-    error?: string;
-    articles?: Array<{
-      title?: string;
-      authors?: string;
-      year?: string;
-      link?: string;
-      cited_by?: { value?: number };
-    }>;
-  };
-
-  if (!response.ok || data.error) throw new Error(data.error ?? `HTTP ${response.status}`);
+  }, apiKey);
   if (!data.articles?.length) throw new Error('SerpApi returned no articles');
 
-  return data.articles.map((article) => ({
-    title: article.title ?? '',
-    authors: article.authors ?? '',
-    citationCount: article.cited_by?.value ?? 0,
-    year: article.year ? Number.parseInt(article.year, 10) : null,
-    scholarUrl: article.link ?? '',
+  const existingUrls = new Map(existing.map((paper) => [paper.title, paper.scholarUrl]));
+  return Promise.all(data.articles.map(async (article: any) => {
+    let paperUrl = existingUrls.get(article.title);
+    if (!paperUrl || paperUrl.includes('scholar.google.')) {
+      const detail = await fetchSerpApi({
+        engine: 'google_scholar_author',
+        author_id: scholarId,
+        view_op: 'view_citation',
+        citation_id: article.citation_id,
+      }, apiKey);
+      paperUrl = detail.citation?.link ?? article.link ?? '';
+    }
+
+    return {
+      title: article.title ?? '',
+      authors: article.authors ?? '',
+      citationCount: article.cited_by?.value ?? 0,
+      year: article.year ? Number.parseInt(article.year, 10) : null,
+      scholarUrl: paperUrl,
+    };
   }));
 }
 
@@ -55,7 +71,11 @@ async function main() {
   try {
     const apiKey = process.env.SERPAPI_KEY;
     if (apiKey) {
-      papers = await scrapeViaSerpApi(scholarId, apiKey);
+      papers = await scrapeViaSerpApi(
+        scholarId,
+        apiKey,
+        loadFallbackData(scholarId) ?? [],
+      );
     } else {
       const result = await scrapeScholarProfile(scholarId);
       if (!result.success) throw new Error(result.error);
