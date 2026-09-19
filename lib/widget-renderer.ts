@@ -37,7 +37,7 @@ function renderPaperCard(paper: Paper): string {
         <div class="paper-authors">${escapeHtml(paper.authors)}</div>
         <div class="paper-meta">
           <span class="paper-year">${escapeHtml(yearStr)}</span>
-          <a class="scholar-link" href="${escapeHtml(paper.scholarUrl)}" target="_blank" rel="noopener noreferrer">View on Google Scholar →</a>
+          <a class="scholar-link" href="${escapeHtml(paper.scholarUrl)}" target="_blank" rel="noopener noreferrer">View paper →</a>
         </div>
       </div>`;
 }
