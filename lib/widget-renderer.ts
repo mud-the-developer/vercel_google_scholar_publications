@@ -10,7 +10,7 @@ export interface WidgetRenderOptions {
 
 const DEFAULT_OPTIONS: WidgetRenderOptions = {
   maxPapers: 5,
-  theme: 'light',
+  theme: 'auto',
 };
 
 function escapeHtml(str: string): string {
@@ -22,7 +22,11 @@ function escapeHtml(str: string): string {
     .replace(/'/g, '&#39;');
 }
 
-function renderPaperCard(paper: Paper, colors: ThemeColors): string {
+function themeToVars(colors: ThemeColors): string {
+  return `--w-bg:${colors.bg};--w-border:${colors.border};--w-title:${colors.title};--w-authors:${colors.authors};--w-badge:${colors.citationBadge};--w-badge-text:${colors.citationText};--w-year:${colors.yearText};--w-divider:${colors.divider};--w-header:${colors.headerTitle};--w-header-sub:${colors.headerSub};`;
+}
+
+function renderPaperCard(paper: Paper): string {
   const yearStr = paper.year !== null ? String(paper.year) : 'N/A';
 
   return `      <div class="paper-card">
@@ -43,12 +47,23 @@ export function renderWidget(
   options?: Partial<WidgetRenderOptions>
 ): string {
   const opts: WidgetRenderOptions = { ...DEFAULT_OPTIONS, ...options };
-  const colors = getTheme(opts.theme ?? 'light');
   const displayPapers = papers.slice(0, opts.maxPapers);
-  const cards = displayPapers.map((p) => renderPaperCard(p, colors)).join('\n');
+  const cards = displayPapers.map((p) => renderPaperCard(p)).join('\n');
 
-  const widthStyle = opts.width ? `width: ${opts.width};` : 'max-width: 720px;';
+  const widthStyle = opts.width ? `width: ${opts.width};` : 'width: 100%;max-width: 720px;';
   const heightStyle = opts.height ? `height: ${opts.height}; overflow-y: auto;` : '';
+
+  const isAuto = !opts.theme || opts.theme === 'auto';
+  const light = getTheme('light');
+  const dark = getTheme('dark');
+
+  let themeStyle: string;
+  if (isAuto) {
+    themeStyle = `:root{${themeToVars(light)}} @media(prefers-color-scheme:dark){:root{${themeToVars(dark)}}}`;
+  } else {
+    const fixed = getTheme(opts.theme!);
+    themeStyle = `:root{${themeToVars(fixed)}}`;
+  }
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -57,99 +72,40 @@ export function renderWidget(
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Publications</title>
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    ${themeStyle}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-      background: ${colors.bg};
-      color: ${colors.title};
+      background: var(--w-bg);
+      color: var(--w-title);
       padding: 16px;
       line-height: 1.5;
     }
-    .widget-container {
-      ${widthStyle}
-      ${heightStyle}
-      margin: 0 auto;
-    }
+    .widget-container { ${widthStyle} ${heightStyle} margin: 0 auto; }
     .widget-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 16px;
-      font-weight: 700;
-      color: ${colors.headerTitle};
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid ${colors.border};
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 16px; font-weight: 700; color: var(--w-header);
+      margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--w-border);
     }
-    .widget-header .cites-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: ${colors.headerSub};
-    }
-    .paper-card {
-      padding: 12px 0;
-      border-bottom: 1px solid ${colors.divider};
-    }
-    .paper-card:last-child {
-      border-bottom: none;
-    }
-    .paper-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 8px;
-    }
+    .widget-header .cites-label { font-size: 12px; font-weight: 600; color: var(--w-header-sub); }
+    .paper-card { padding: 12px 0; border-bottom: 1px solid var(--w-divider); }
+    .paper-card:last-child { border-bottom: none; }
+    .paper-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
     .paper-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: ${colors.citationBadge};
-      text-decoration: none;
-      flex: 1;
-      overflow-wrap: break-word;
-      word-break: break-word;
+      font-size: 14px; font-weight: 600; color: var(--w-badge);
+      text-decoration: none; flex: 1; overflow-wrap: break-word; word-break: break-word;
     }
-    .paper-title:hover {
-      text-decoration: underline;
-    }
+    .paper-title:hover { text-decoration: underline; }
     .citation-badge {
-      background: ${colors.citationBadge};
-      color: ${colors.citationText};
-      font-size: 12px;
-      font-weight: 600;
-      padding: 2px 10px;
-      border-radius: 12px;
-      white-space: nowrap;
-      flex-shrink: 0;
+      background: var(--w-badge); color: var(--w-badge-text);
+      font-size: 12px; font-weight: 600; padding: 2px 10px;
+      border-radius: 12px; white-space: nowrap; flex-shrink: 0;
     }
-    .paper-authors {
-      font-size: 12px;
-      color: ${colors.authors};
-      margin-top: 4px;
-      overflow-wrap: break-word;
-      word-break: break-word;
-    }
-    .paper-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 6px;
-      font-size: 11px;
-    }
-    .paper-year {
-      color: ${colors.yearText};
-    }
-    .scholar-link {
-      color: ${colors.citationBadge};
-      text-decoration: none;
-      font-size: 11px;
-    }
-    .scholar-link:hover {
-      text-decoration: underline;
-    }
+    .paper-authors { font-size: 12px; color: var(--w-authors); margin-top: 4px; overflow-wrap: break-word; word-break: break-word; }
+    .paper-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; font-size: 11px; }
+    .paper-year { color: var(--w-year); }
+    .scholar-link { color: var(--w-badge); text-decoration: none; font-size: 11px; }
+    .scholar-link:hover { text-decoration: underline; }
     @media (max-width: 480px) {
       body { padding: 12px; }
       .paper-header { flex-direction: column; gap: 4px; }

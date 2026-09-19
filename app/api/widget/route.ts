@@ -18,7 +18,7 @@ export async function GET(request: NextRequest): Promise<Response> {
   }
 
   const count = Math.max(1, parseInt(searchParams.get('count') ?? '5', 10) || 5);
-  const theme = searchParams.get('theme') ?? 'light';
+  const theme = searchParams.get('theme') ?? 'auto';
   const width = searchParams.get('width') ?? undefined;
   const height = searchParams.get('height') ?? undefined;
 
