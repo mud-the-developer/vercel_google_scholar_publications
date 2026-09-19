@@ -35,9 +35,10 @@ async function scrapeViaSerpApi(
   }, apiKey);
   if (!data.articles?.length) throw new Error('SerpApi returned no articles');
 
-  const existingUrls = new Map(existing.map((paper) => [paper.title, paper.scholarUrl]));
+  const existingPapers = new Map(existing.map((paper) => [paper.title, paper]));
   return Promise.all(data.articles.map(async (article: any) => {
-    let paperUrl = existingUrls.get(article.title);
+    const previous = existingPapers.get(article.title);
+    let paperUrl = previous?.scholarUrl;
     if (!paperUrl || paperUrl.includes('scholar.google.')) {
       const detail = await fetchSerpApi({
         engine: 'google_scholar_author',
@@ -49,11 +50,13 @@ async function scrapeViaSerpApi(
     }
 
     return {
+      ...previous,
       title: article.title ?? '',
       authors: article.authors ?? '',
       citationCount: article.cited_by?.value ?? 0,
       year: article.year ? Number.parseInt(article.year, 10) : null,
       scholarUrl: paperUrl,
+      citationUpdatedAt: new Date().toISOString().slice(0, 7),
     };
   }));
 }

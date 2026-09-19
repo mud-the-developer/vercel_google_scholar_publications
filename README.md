@@ -78,13 +78,16 @@ GitHub README에 삽입 (배포 후):
 GET /api/widget?scholar_id={SCHOLAR_ID}&count={COUNT}
 ```
 
-파라미터는 배지 API와 동일합니다.
+기본 위젯은 배지 API와 같은 파라미터를 사용합니다. 포트폴리오형은
+`style=portfolio`를 추가하고 `accent=ff2d8d`처럼 강조색을 지정할 수 있습니다.
+(`#`을 사용할 경우 `%23ff2d8d`처럼 URL 인코딩해야 합니다.)
 
 **사용 예시:**
 
 브라우저에서 직접 확인:
 ```
 http://localhost:3000/api/widget?scholar_id=YOUR_SCHOLAR_ID
+http://localhost:3000/api/widget?scholar_id=YOUR_SCHOLAR_ID&style=portfolio&accent=ff2d8d
 ```
 
 블로그에 iframe으로 임베드 (배포 후):

@@ -4,21 +4,30 @@
     "authors": "S Oh, J Kim, J Park, SW Ko, TQS Quek, SL Kim",
     "citationCount": 36,
     "year": 2025,
-    "scholarUrl": "https://ieeexplore.ieee.org/abstract/document/11140540/"
+    "scholarUrl": "https://ieeexplore.ieee.org/abstract/document/11140540/",
+    "venue": "IEEE ICMLCN",
+    "role": "Co-first Author",
+    "citationUpdatedAt": "2026-09"
   },
   {
     "title": "Communication-efficient hybrid language model via uncertainty-aware opportunistic and compressed transmission",
     "authors": "S Oh, J Kim, J Park, SW Ko, J Choi, TQS Quek, SL Kim",
     "citationCount": 6,
     "year": 2026,
-    "scholarUrl": "https://ieeexplore.ieee.org/abstract/document/11551572/"
+    "scholarUrl": "https://ieeexplore.ieee.org/abstract/document/11551572/",
+    "venue": "IEEE TCOM",
+    "role": "2nd Author",
+    "citationUpdatedAt": "2026-09"
   },
   {
     "title": "Quantum infidelity codistillation for fast and accurate distributed quantum machine learning: S. Oh et al.",
     "authors": "S Oh, J Kim, J Park, H Baek, H Lee, J Kim, SL Kim",
     "citationCount": 2,
     "year": 2025,
-    "scholarUrl": "https://link.springer.com/article/10.1007/s11227-025-07614-y"
+    "scholarUrl": "https://link.springer.com/article/10.1007/s11227-025-07614-y",
+    "venue": "J. Supercomputing",
+    "role": "2nd Author",
+    "citationUpdatedAt": "2026-09"
   },
   {
     "title": "강화학습 기반 다중 에이전트 간 시맨틱 통신 작업 환경",

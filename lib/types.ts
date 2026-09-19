@@ -4,6 +4,9 @@ export interface Paper {
   citationCount: number;
   year: number | null;
   scholarUrl: string;
+  venue?: string;
+  role?: string;
+  citationUpdatedAt?: string;
 }
 
 export interface CacheEntry {

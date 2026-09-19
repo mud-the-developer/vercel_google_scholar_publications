@@ -162,6 +162,26 @@ describe('Widget Renderer - Unit Tests', () => {
     expect(html).toContain('Publications');
   });
 
+  it('renders portfolio metadata, citation date, and a validated accent', () => {
+    const html = renderWidget([{
+      title: 'A full paper title that must remain visible',
+      authors: 'Author A, Author B',
+      citationCount: 36,
+      year: 2025,
+      scholarUrl: 'https://example.com/paper',
+      venue: 'IEEE ICMLCN',
+      role: 'Co-first Author',
+      citationUpdatedAt: '2026-09',
+    }], { maxPapers: 3, style: 'portfolio', accent: '#ff2d8d' });
+
+    expect(html).toContain('A full paper title that must remain visible');
+    expect(html).toContain('IEEE ICMLCN 2025 · Co-first Author');
+    expect(html).toContain('36 citations');
+    expect(html).toContain('Citations · Sep. 2026');
+    expect(html).toContain('--w-accent:#ff2d8d');
+    expect(html).not.toContain('<span class="citation-badge">');
+  });
+
   /**
    * **Validates: Requirements 4.3**
    * THE Widget_Renderer SHALL support iframe embedding by including
