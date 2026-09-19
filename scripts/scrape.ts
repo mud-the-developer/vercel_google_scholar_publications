@@ -37,7 +37,8 @@ async function scrapeViaSerpApi(
 
   const existingPapers = new Map(existing.map((paper) => [paper.title, paper]));
   return Promise.all(data.articles.map(async (article: any) => {
-    const previous = existingPapers.get(article.title);
+    const title = (article.title ?? '').replace(/: S\. Oh et al\.$/, '');
+    const previous = existingPapers.get(title);
     let paperUrl = previous?.scholarUrl;
     if (!paperUrl || paperUrl.includes('scholar.google.')) {
       const detail = await fetchSerpApi({
@@ -51,7 +52,7 @@ async function scrapeViaSerpApi(
 
     return {
       ...previous,
-      title: article.title ?? '',
+      title,
       authors: article.authors ?? '',
       citationCount: article.cited_by?.value ?? 0,
       year: article.year ? Number.parseInt(article.year, 10) : null,
