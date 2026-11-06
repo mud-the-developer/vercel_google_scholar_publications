@@ -2,7 +2,7 @@
   {
     "title": "Uncertainty-aware hybrid inference with on-device small and remote large language models",
     "authors": "S Oh, J Kim, J Park, SW Ko, TQS Quek, SL Kim",
-    "citationCount": 37,
+    "citationCount": 38,
     "year": 2025,
     "scholarUrl": "https://ieeexplore.ieee.org/abstract/document/11140540/",
     "venue": "IEEE ICMLCN",
@@ -12,7 +12,7 @@
   {
     "title": "Communication-efficient hybrid language model via uncertainty-aware opportunistic and compressed transmission",
     "authors": "S Oh, J Kim, J Park, SW Ko, J Choi, TQS Quek, SL Kim",
-    "citationCount": 7,
+    "citationCount": 8,
     "year": 2026,
     "scholarUrl": "https://ieeexplore.ieee.org/abstract/document/11551572/",
     "venue": "IEEE TCOM",
